@@ -45,10 +45,17 @@ def lstrip_precise(word, number):
 # 暂只支持指定行区间，不支持指定单独行
 def 自动对指定行区间文本缩进指定数量空(被修改的行区间=[0, None], 缩进多少空=4, chdir_at_startup=None):
     ask=("❓要对指定行区间文本缩进指定数量空的文件在哪个目录下？\033[31m（❗️提示：请做好备份！）\033[0m")
-    if chdir_at_startup is None:browse_directory(ask)
-    else:browse_directory(ask,chdir_at_startup)    
+    if chdir_at_startup is None:browse_directory(ask, os.getcwd())
+    else:
+        browse_directory(ask,chdir_at_startup)    
+        chdir_at_startup = None
+        
+    selected_fileNames=select_multiple_files(os.listdir())
+    selected_fileNames=[_ for _ in selected_fileNames if os.path.isfile(_)]
+    if not selected_fileNames:
+        input("❌没有选中文件，请重新选择。")
+        return
     
-    selected_files=select_multiple_files(os.listdir())
     while True:
         answer=input("\n❓请输入要被修改的行区间(以空格分隔)(Enter:默认）:\n")
         if answer:
@@ -57,8 +64,8 @@ def 自动对指定行区间文本缩进指定数量空(被修改的行区间=[0
                 print("❌行号必须是整数\n")
                 continue
         break
-    for current_file in selected_files:
-        with open(current_file,'r+') as f:
+    for current_fileName in selected_fileNames:
+        with open(current_fileName,'r+') as f:
             文件指针从头移到指定行(f,被修改的行区间[0])
             original_content=f.readlines()[:被修改的行区间[1]]
             for line in original_content:print(line)
@@ -79,13 +86,14 @@ def 自动对指定行区间文本缩进指定数量空(被修改的行区间=[0
             
             print("\n✅从需要被修改的首行到需要被修改末行之间已缩进完毕！")
         
-    return os.getcwd()
 
 def main():
-    chdir_at_startup = 自动对指定行区间文本缩进指定数量空(缩进多少空=4)
+    os.chdir(os.path.dirname(__file__))
+    while True:
+        自动对指定行区间文本缩进指定数量空(缩进多少空=4)
+        print()
     
-    while True:自动对指定行区间文本缩进指定数量空(缩进多少空=4, chdir_at_startup=chdir_at_startup)
-    
+  
 if __name__=="__main__":
     main()
 
