@@ -7,24 +7,31 @@ def 自动判断文件是否相对于给定日期更新(after_that_time="2025-01
     browse_directory("❓需要判断是否相对于给定日期更新的所有文件在哪个目录下？(会自动查看所选目录下的全部子目录下的文件)",os.getcwd())
     
     new_only=False
+    fmt="%Y-%m-%d %H:%M:%S"
     while True:
         answer=input("❓用于比较是否在这之后修改的给定日期是(日期格式:年-月-日 时:分:秒)：\n(Enter:默认)\n")
         if not answer:
-            if isinstance(after_that_time, datetime):
-                after_that_time_formated=after_that_time
-            elif isinstance(after_that_time, str):
-                after_that_time_formated=datetime.strptime(after_that_time,"%Y-%m-%d %H:%M:%S")
-            else:
+            if not isinstance(after_that_time, (datetime, str)):
                 print("❌默认日期必须是datetime类型对象或str类型对象\n")
                 continue
+            if isinstance(after_that_time, datetime):
+                try:after_that_time_formated = datetime.strptime(after_that_time.strftime(fmt),fmt)
+                except:
+                    print(f"❌默认日期格式不对: {after_that_time.__repr__()}")
+                    continue
+            elif isinstance(after_that_time, str):                     
+                try:after_that_time_formated=datetime.strptime(after_that_time,fmt)
+                except:
+                    print(f"❌默认日期格式不正确: {after_that_time.__repr__()}")
+                    continue
             break
-        try:after_that_time_formated=datetime.strptime(answer,"%Y-%m-%d %H:%M:%S")
+        try:after_that_time_formated=datetime.strptime(answer, fmt)
         except Exception as e:
             print("❌日期格式不正确")
             print(type(e).__name__,e,sep=":",end="\n"*2)
             continue
         break
-    print("⚡️你的决定：给定日期是:",after_that_time_formated,end="\n"*2)
+    print("⚡️你的决定：给定日期是:\n",after_that_time_formated,end="\n"*2,sep="")
     after_that_time=str(after_that_time_formated)
     content=f"⚡️给定日期：{after_that_time_formated}（将修改日期与之对比是否在这之后，从而获知哪些文件是更新了的，从而避免漏把更新了的文件及时上传）\n"
    

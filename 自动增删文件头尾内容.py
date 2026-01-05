@@ -43,13 +43,11 @@ def 自动删除文件头内容():
     print("✅删除文件头内容完成！\n")
 
 
-header_content ='''#include <stdio.h>
-#include <stdlib.h>
-#include "../../include/Fight_Info_Struct.h"
-#include "../../include/Fight_Info_Operate.h"
+header_content ='''#include "../include/字符串消消乐之按顺序消除更多者胜.h"
+
 '''
     
-第几行之前=4
+第几行之前=0
     
 particulars=list()
 particulars.append(dict())
@@ -68,7 +66,7 @@ particulars[1]["header_content"]=header_content+\
     
 # 开关之是否仅特殊组参与
 # 记得每次操作之前检查这个开关
-particular_only=True
+particular_only=False
     
 # 选择之参与的特殊组是哪一组
 particular_use_number=1
@@ -76,9 +74,9 @@ particular_use_number=1
 # 开关之是否启用删除
 delete_enabled=True
     
-    
+os.chdir(os.path.dirname(__file__))  
 while True:
-    browse_directory("❓增删哪里的文件头内容？")
+    browse_directory("❓增删哪里的文件头内容？",os.getcwd())
     
     src_files = [f for f in os.listdir() if f.endswith('.c')]
     
